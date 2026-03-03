@@ -1,3 +1,4 @@
+# Deterministic Dungeon Generator
 > Modular dungeon generation with deterministic seeds and collision-safe placement.
 
 ---
