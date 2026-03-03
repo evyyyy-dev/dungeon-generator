@@ -64,7 +64,7 @@ ServerScriptServie
 
 ## Code snippets
 
-Check out [code-snippets.lua](../code-snippets.lua) for code examples.
+Check out [code-snippets.lua](../main/code-snippets.lua) for code examples.
 
 ---
 
