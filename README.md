@@ -1,4 +1,4 @@
-# Deterministic Dungeon Generator
+<img width="1851" height="340" alt="image" src="https://github.com/user-attachments/assets/cc90ea6c-19e9-489e-b0eb-b122545d0762" /># Deterministic Dungeon Generator
 
 > Modular dungeon generation with deterministic seeds and collision-safe placement.
 
@@ -21,7 +21,7 @@
 
 ## Showcase
 
-[![Watch showcase](https://img.youtube.com/vi/OdpghMGbseU/0.jpg)](https://www.youtube.com/watch?v=OdpghMGbseU)
+[![Watch showcase](https://img.youtube.com/vi/vrHEV04Z8go/0.jpg)](https://www.youtube.com/watch?v=vrHEV04Z8go)
 
 ---
 
@@ -66,7 +66,7 @@ ServerScriptServie
 
 ## Code snippets
 
-Check out [code-snippets.lua](https://github.com/evyyyy-dev/past-works/blob/main/dungeon-generator/code-snippets.lua) for code examples.
+Check out [code-snippets.lua](../code-snippets.lua) for code examples.
 
 ---
 
