@@ -1,5 +1,3 @@
-<img width="1851" height="340" alt="image" src="https://github.com/user-attachments/assets/cc90ea6c-19e9-489e-b0eb-b122545d0762" /># Deterministic Dungeon Generator
-
 > Modular dungeon generation with deterministic seeds and collision-safe placement.
 
 ---
