@@ -72,25 +72,23 @@ Check out [code-snippets.lua](code-snippets.lua) for code examples.
 
 I made this because I wanted to build something bigger and more organized than my previous projects.
 
-My goal here wasn't to make it just generate rooms, but to design a modular and expandable system that could grow over time.
+My goal here wasn't to make it just generate rooms, but to design a modular system that could effortlessly be expanded later.
 
-This was my first time making a deterministic dungeon generator, and I treated it as a way to improve my architectural decisions and performance awareness.
+This was my first time making something like this, and I treated it as a way to improve my architectural decisions and performance awareness.
 
 ## What I Learned
 
-This project helped me better understand state-driven systems and how generation flow can be structured cleanly.
+This project helped me better understand state-driven systems, but mainly how generation flow can be structured cleanly.
 
-I also learned how small decisions can significantly impact performance. My original approach cloned and positioned the complete room models to test for collisions. I later refactored this to use `GetPartsInBoundBox` as an imaginary bounding box before instantiation, which reduced unnecessary operations and improved efficiency.
+I also learned how small decisions can significantly impact performance. My original approach cloned and positioned the complete room models to test for collisions. I later rewrote this to use `GetPartsInBoundBox` as an imaginary bounding box before instantiation, which reduced unnecessary operations and improved efficiency.
 
 In addition, I gained more experience working with metadata-driven architecture instead of hardcoded logic. Designing the system around room metadata made it a lot easier to extend and maintain.
 
-Lastly, I became more intentional about writing cleaner code by simplifying conditionals, reducing redundancy, and organizing logic in a way that improves readability.
+Lastly, I became more intentional about writing cleaner code by reducing redundancy and organizing logic in a way, so that it improves readability.
 
 ## What I'd Improve
 
-The main area I would improve is the backtracking system. It currently only allows 3 recovery attempts before terminating generation. Expanding this into a more dynamic backtracking system would make the generator more resilient.
-
-I would also consider changing the layout generation entirely — generating only the full layout first, validating it, and only then cloning and positioning the final room models. This could optimize performance even further and make the system more scalable.
+I consider changing the layout generation completely, by generating only the full layout first (without models), validating it, and only then cloning and placing the room models. This could optimize performance even further and make the system more scalable.
 
 ---
 
