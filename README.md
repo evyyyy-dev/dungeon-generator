@@ -34,8 +34,8 @@ Workspace
          └─ SurfaceGui
             ├─ Frame   
             │   └─ InputContainer
-            │       ├─ RoomInput   │ Number input for the amount of rooms to generate.
-            │       └─ SeedInput   │ Number input for the seed, if nothing is specified it uses a random seed.
+            │       ├─ RoomInput    │ Number input for the amount of rooms to generate.
+            │       └─ SeedInput    │ Number input for the seed, if nothing is specified it uses a random seed.
             └─ StartButton
 
 ReplicatedStorage
