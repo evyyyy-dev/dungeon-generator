@@ -28,38 +28,59 @@
 
 ```
 Workspace
- ├─ LoadedRooms                     │ The folder where all loaded rooms are inside of.
- └─ GeneratorModel
+ ├─ LoadedRooms                        │ The folder where all loaded rooms are inside of.
+ └─ GeneratorModel                     │ State-machine handling room and seed input, that also listens for initialization/generation commands.
      └─ ControlPanel
          └─ SurfaceGui
             ├─ Frame   
             │   └─ InputContainer
-            │       ├─ RoomInput    │ Number input for the amount of rooms to generate.
-            │       └─ SeedInput    │ Number input for the seed, if nothing is specified it uses a random seed.
+            │       ├─ RoomInput       │ Number input for the amount of rooms to generate.
+            │       └─ SeedInput       │ Number input for the seed, if nothing is specified it uses a random seed.
             └─ StartButton
 
 ReplicatedStorage
  ├─ Modules
  │   ├─ Core
- │   │   └─ Generator               │ The main module that handles placing, collision checking, backtracking, and more.
+ │   │   └─ Generator                  │ The main module that handles placing, collision checking, backtracking, and more.
  │   └─ Utils
- │       └─ Shared                  │ Shared variables used across 2+ scripts.
+ │       └─ Shared                     │ Shared variables used across 2+ scripts.
  ├─ Rooms
  │   └─ ExampleRoom
- │       ├─  Connectors             │ A folder containing both  └─start and end connectors, used for placement
- │       │  ├─ StartConnector       │ The StartConnector pivots to the previous room's EndConnector.
+ │       ├─  Connectors                │ A folder containing both start and end connectors, used for placement
+ │       │  ├─ StartConnector          │ The StartConnector pivots to the previous room's EndConnector.
  │       │  └─ EndConnector
  │       ├─ Geometry
  │       │  ├─ Walls
  │       │  └─ Floor
  │       ├─ Props
- │       └─ MetadataValues          │ Metadata of the room containing it's weight (chance to get picked) and type.
- ├─ ModuleRegistry                  │ Centralized module access, so renaming a module requires updating only one variable.
+ │       └─ MetadataValues             │ Metadata of the room containing it's weight (chance to get picked) and type.
+ ├─ DefaultMetadata                    │ Used in case a room is missing MetadataValues.
+ ├─ ModuleRegistry                     │ Centralized module access, so renaming a module requires updating only one variable.
  └─ StartGeneratingEvent
 
 ServerScriptServie
- └─ RoomGeneration                  │ State machine that initializes, generates, and if needed, erases the whole dungeon.
+ └─ RoomGeneration                     │ State machine that initializes, generates, and if needed, erases the whole dungeon.
 ```
+
+#### System flow
+
+- The GeneratorModel state-machine listens for the room count and seed input.
+
+- On initialization, the Generator module validates all room templates, ensuring required metadata and primary parts exist.
+
+- When generation begins, the starting room is placed at index 0.
+
+- The generator enters a loop that continues until the required number of rooms has been placed.
+
+- At each index, the system either attempts to place a forced room or selects a room using weighted random chances.
+
+- If placement fails, the generator retries other available rooms that have not yet been attempted.
+
+- If no valid room can be placed, the system backtracks several rooms and continues generation from there.
+
+- If the retry limit is exceeded, generation fails to prevent infinite loops.
+
+- When all rooms are successfully placed, the generator finishes and reports the generation time.
 
 ---
 
@@ -71,9 +92,9 @@ Check out [code-snippets.lua](code-snippets.lua) for code examples.
 
 ## Why I Made This
 
-I made this because I wanted to build something bigger and more organized than my previous projects.
+I made this because I wanted to build something bigger and more organized than all of my previous projects.
 
-My goal here wasn't to make it just generate rooms, but to design a modular system that could effortlessly be expanded later.
+My goal here was to design a modular system that could effortlessly be expanded later.
 
 This was my first time making something like this, and I treated it as a way to improve my architectural decisions and performance awareness.
 
@@ -93,4 +114,4 @@ I consider changing the layout generation completely, by generating only the ful
 
 ---
 
-> ✅ **Status:** Complete *(further improvements may be made)*
+> ✅ **Status:** Complete, although further improvements may be made.
