@@ -13,7 +13,7 @@ function Generator:_CheckCollisions(roomModel: Model, targetCFrame: CFrame)
 
 	local parts = workspace:GetPartBoundsInBox(
 		collisionCFrame,
-		 -- Shrink to make collisions less strict
+		-- Shrink to make collisions less strict
 		bboxSize * COLLISION_SHRINK_MULT
 	)
 
@@ -30,14 +30,14 @@ function Generator:_TryRoom(room, id)
 		warn(`[Generator] Couldn't find room "{room}" inside of the Rooms Folder!`)
 		return
 	end
-	
+
 	local previousRoom = self.newestRoom
 
 	if not previousRoom then
 		local roomClone: Model = roomModel:Clone()
-		roomClone.Parent = sharedModule.loadedRoomsFolder
+		roomClone.Parent = loadedRoomsFolder
 		roomClone.Name = string.format("%03d_%s", id, roomClone.Name)
-		
+
 		self.RoomsLeftToGenerate -= 1
 		self.newestRoom = roomClone
 		table.insert(self.placedRooms, roomClone)
@@ -56,22 +56,22 @@ function Generator:_TryRoom(room, id)
 		warn(`[Generator] Room "{roomModel.Name}" doesn't have a startConnector!`)
 		return false
 	end
-	
+
 	local offset = roomModel.PrimaryPart.CFrame:ToObjectSpace(newStartConnector.CFrame)
 	-- Align new room's StartConnector to the previous room's EndConnector
 	local targetCFrame = prevEndConnector.CFrame * CFrame.new(0, 0, -prevEndConnector.Size.Z) * offset:Inverse()
 	local isColliding = self:_CheckCollisions(roomModel, targetCFrame)
 	if isColliding then	return false end
-	
+
 	local roomClone: Model = roomModel:Clone()
-	roomClone.Parent = sharedModule.loadedRoomsFolder
+	roomClone.Parent = loadedRoomsFolder
 	roomClone.Name = string.format("%03d_%s", id, roomClone.Name)
 	roomClone:PivotTo(targetCFrame)
 
 	self.newestRoom = roomClone
 	self.RoomsLeftToGenerate -= 1
 	table.insert(self.placedRooms, roomClone)
-	
+
 	return true
 end
 
@@ -115,14 +115,14 @@ function Generator:_GenerationLoop()
 
 		local triedCount = 0
 		local totalCount = 0
-		
+
 		for _ in pairs(self.triedRooms[index]) do triedCount += 1 end
 		for _ in pairs(self.RoomChances) do totalCount += 1 end
 
 		if triedCount < totalCount then
 			continue
 		end
-		
+
 		--Prevent infinite backtracking loops at the same index
 		self.backtrackCount[index] = (self.backtrackCount[index] or 0) + 1
 
@@ -133,7 +133,7 @@ function Generator:_GenerationLoop()
 
 		self:_Backtrack(BACKTRACK_AMOUNT, index)
 	end
-	
+
 	print(string.format("[INFO] Finished generating in %.5fs!",
 		os.clock() - startTime
 	))
