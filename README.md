@@ -29,45 +29,46 @@
 ```
 Workspace
  ├─ LoadedRooms                        │ The folder where all loaded rooms are inside of.
- └─ GeneratorModel                     │ State-machine handling room and seed input, that also listens for initialization/generation commands.
+ └─ GeneratorModel                     │ Model used to interact with the state-machine.
      └─ ControlPanel
          └─ SurfaceGui
-            ├─ Frame   
-            │   └─ InputContainer
-            │       ├─ RoomInput       │ Number input for the amount of rooms to generate.
-            │       └─ SeedInput       │ Number input for the seed, if nothing is specified it uses a random seed.
-            └─ StartButton
+             ├─ Frame   
+             │   └─ InputContainer
+             │       ├─ RoomInput      │ Number input for the amount of rooms to generate.
+             │       └─ SeedInput      │ Number input for the seed, if nothing is specified it uses a random seed.
+             └─ StartButton
+
 
 ReplicatedStorage
  ├─ Modules
- │   ├─ Core
- │   │   └─ Generator                  │ The main module that handles placing, collision checking, backtracking, and more.
- │   └─ Utils
- │       └─ Shared                     │ Shared variables used across 2+ scripts.
+ │   └─ Generator                      │ The main module that handles placing, collision checking, backtracking, and more.
  ├─ Rooms
  │   └─ ExampleRoom
- │       ├─  Connectors                │ A folder containing both start and end connectors, used for placement
- │       │  ├─ StartConnector          │ The StartConnector pivots to the previous room's EndConnector.
- │       │  └─ EndConnector
+ │       ├─ Connectors                 │ A folder containing both start and end connectors, used for placement.
+ │       │   ├─ StartConnector         │ The StartConnector pivots to the previous room's EndConnector.
+ │       │   └─ EndConnector
  │       ├─ Geometry
- │       │  ├─ Walls
- │       │  └─ Floor
+ │       │   ├─ Walls
+ │       │   └─ Floor
  │       ├─ Props
- │       └─ MetadataValues             │ Metadata of the room containing it's weight (chance to get picked) and type.
+ │       └─ MetadataValues             │ Metadata of the room containing its weight (chance to get picked) and (optional) flags (like isStart or isForced).
  ├─ DefaultMetadata                    │ Used in case a room is missing MetadataValues.
- ├─ ModuleRegistry                     │ Centralized module access, so renaming a module requires updating only one variable.
  └─ StartGeneratingEvent
+
 
 ServerScriptServie
  └─ RoomGeneration                     │ State machine that initializes, generates, and if needed, erases the whole dungeon.
+
+
+StarterCharacterScripts
+ └─ RoomGenerationClient               │ Small script to listen for MouseButton1Click events inside of the StartButton (in GeneratorModel).
 ```
 
 #### System flow
+- `RoomGenerationClient` listens for `StartButton` clicks and fires `StartGeneratingEvent` when the room count and seed input are valid.
 
-- The GeneratorModel state-machine listens for the room count and seed input.
-
-- On initialization, the Generator module validates all room templates, ensuring required metadata and primary parts exist.
-
+- On initialization, the `Generator` module validates all room templates, making sure that the required metadata and primary parts exist. If one is missing, it uses its default value.
+ 
 - When generation begins, the starting room is placed at index 0.
 
 - The generator enters a loop that continues until the required number of rooms has been placed.
@@ -78,7 +79,7 @@ ServerScriptServie
 
 - If no valid room can be placed, the system backtracks several rooms and continues generation from there.
 
-- If the retry limit is exceeded, generation fails to prevent infinite loops.
+- If the backtracking retry limit is exceeded, generation fails to prevent infinite loops.
 
 - When all rooms are successfully placed, the generator finishes and reports the generation time.
 
@@ -92,25 +93,24 @@ Check out [code-snippets.lua](code-snippets.lua) for code examples.
 
 ## Why I Made This
 
-I made this because I wanted to build something bigger and more organized than all of my previous projects.
 
-My goal here was to design a modular system that could effortlessly be expanded later.
+I started this project after asking a friend what kind of system I should build next. She suggested a random map generator, similar to a rougelike, which gave me the idea to make a deterministic dungeon generator.
 
-This was my first time making something like this, and I treated it as a way to improve my architectural decisions and performance awareness.
+At the same time, I wanted to challenge myself by building something larger and more organized than anything I had made before. This project was a way to design a more complex system and improve my overall architecture.
 
 ## What I Learned
 
 This project helped me better understand state-driven systems, but mainly how generation flow can be structured cleanly.
 
-I also learned how small decisions can significantly impact performance. My original approach cloned and positioned the complete room models to test for collisions. I later rewrote this to use `GetPartsInBoundBox` as an imaginary bounding box before instantiation, which reduced unnecessary operations and improved efficiency.
+I also learned how small decisions can impact performance. My original approach cloned and positioned the complete room models to test for collisions. I later rewrote this to use `GetPartsInBoundBox` as an imaginary bounding box before placement, which reduced unnecessary operations and improved efficiency.
 
 In addition, I gained more experience working with metadata-driven architecture instead of hardcoded logic. Designing the system around room metadata made it a lot easier to extend and maintain.
 
-Lastly, I became more intentional about writing cleaner code by reducing redundancy and organizing logic in a way, so that it improves readability.
+Lastly, I became more intentional about writing cleaner code by reducing redundancy and organizing logic in a way so that it becomes easier to read.
 
 ## What I'd Improve
 
-I consider changing the layout generation completely, by generating only the full layout first (without models), validating it, and only then cloning and placing the room models. This could optimize performance even further and make the system more scalable.
+I would consider changing the layout generation completely, by generating only the full layout first (without models), validating it, and only then cloning and placing the room models. This could optimize performance even further and make the system more scalable.
 
 ---
 
